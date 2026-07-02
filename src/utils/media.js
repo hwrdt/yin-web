@@ -1,12 +1,20 @@
 const MEDIA_PATH_PREFIXES = ['/upload/', '/uploads/', '/files/', '/media/', '/static/']
+const VIDEO_SERVICE_URL = 'http://localhost:8082'
 
 export function normalizeMediaUrl(url) {
   if (!url || typeof url !== 'string') return ''
 
   const value = url.trim()
   if (!value) return ''
+  // OSS URLs, data URLs, blob URLs - return directly
   if (/^(https?:)?\/\//.test(value) || value.startsWith('data:') || value.startsWith('blob:')) {
     return value
+  }
+
+  // Local video paths need to be proxied through video service
+  if (value.startsWith('/videos/') || value.startsWith('/upload/videos/')) {
+    // Use the Vite proxy path for video service
+    return '/api/video' + value
   }
 
   if (value.startsWith('/')) return value
