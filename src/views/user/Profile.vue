@@ -43,7 +43,7 @@
       <div class="video-grid" v-if="videoList.length > 0">
         <div v-for="video in videoList" :key="video.id" class="video-card" @click="viewVideo(video)">
           <div class="video-cover">
-            <img :src="video.coverUrl || '/placeholder.jpg'" alt="">
+            <img :src="video.coverUrl" alt="" @error="handleCoverError($event, video)">
             <div class="play-count">
               <el-icon><View /></el-icon>
               {{ formatCount(video.viewCount) }}
@@ -67,6 +67,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { useVideoStore } from '@/store/video'
+import { getDefaultVideoCover } from '@/utils/media'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
@@ -147,6 +148,13 @@ function goToSettings() {
 function viewVideo(video) {
   // 跳转到视频详情页或打开弹窗
   router.push(`/?video=${video.id}`)
+}
+
+function handleCoverError(event, video) {
+  const fallback = getDefaultVideoCover(video)
+  if (event.target.src !== fallback) {
+    event.target.src = fallback
+  }
 }
 
 function formatCount(count) {

@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
   async function login(loginData) {
     const res = await request.post('/user/login', loginData)
     token.value = res.data.token
-    userInfo.value = res.data.user
+    userInfo.value = res.data.user || res.data.userInfo
     localStorage.setItem('token', res.data.token)
     return res.data
   }

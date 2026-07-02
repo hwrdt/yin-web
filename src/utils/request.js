@@ -15,6 +15,10 @@ request.interceptors.request.use(
     if (userStore.token) {
       config.headers['Authorization'] = `Bearer ${userStore.token}`
     }
+    // 视频上传接口使用更长的超时时间
+    if (config.url === '/video/upload') {
+      config.timeout = 300000 // 5分钟
+    }
     return config
   },
   error => {

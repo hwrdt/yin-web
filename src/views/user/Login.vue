@@ -29,6 +29,13 @@
           </el-button>
         </el-form-item>
 
+        <!-- 快速登录按钮（测试用） -->
+        <el-form-item>
+          <el-button type="success" @click="quickLogin" block plain>
+            快速登录（测试账号）
+          </el-button>
+        </el-form-item>
+
         <div class="login-footer">
           <span>还没有账号？</span>
           <el-link type="primary" @click="goToRegister">立即注册</el-link>
@@ -75,6 +82,25 @@ async function handleLogin() {
   } finally {
     loading.value = false
   }
+}
+
+// 快速登录（测试用）
+function quickLogin() {
+  // 直接设置 token 和用户信息
+  const mockToken = 'mock_token_' + Date.now()
+  userStore.token = mockToken
+  userStore.userInfo = {
+    id: 1,
+    nickname: '测试用户',
+    avatar: 'https://picsum.photos/100/100?random=100',
+    email: 'test@example.com'
+  }
+  localStorage.setItem('token', mockToken)
+  ElMessage.success('快速登录成功')
+
+  // 跳转到之前的页面或首页
+  const redirect = route.query.redirect || '/'
+  router.push(redirect)
 }
 
 function goToRegister() {
